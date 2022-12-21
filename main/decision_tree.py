@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 from sklearn import tree
-
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn import metrics

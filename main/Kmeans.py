@@ -14,7 +14,7 @@ x_test=np.array(data_test)[:,1:141]
 y_test=np.array(data_test)[:,0]
 
 # cls=DBSCAN(min_samples=1,eps=4) ##DBSCAN中噪声点过多
-cls=KMeans(n_clusters=5,n_init=1,random_state=1)
+cls=KMeans(n_clusters=5,n_init=10,random_state=1)
 cls.fit(x)
 y_pred=cls.fit_predict(x_test)
 

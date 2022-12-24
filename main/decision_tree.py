@@ -2,8 +2,8 @@ import graphviz
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn
 from sklearn import tree
+from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
@@ -11,7 +11,6 @@ from sklearn.model_selection import learning_curve
 from sklearn.tree import DecisionTreeClassifier
 
 from Utils.FunC import Dimensionality_reduction
-from Utils.FunC import normalize
 
 data_train = pd.read_csv('../dataset/ECG5000_TRAIN.tsv', sep='\t', header=None)
 x = np.array(data_train)[:, 1:141]
@@ -39,12 +38,9 @@ y_pred = cls.predict(x_test)
 ac = accuracy_score(y_test, y_pred)
 print("准确率:%.4lf" % ac)
 
-plt.figure()
-df = pd.DataFrame(confusion_matrix(y_test, y_pred),
-                  index=labels,
-                  columns=labels
-                  )
-seaborn.heatmap(df, annot=True)
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(cm, display_labels=labels)
+disp.plot()
 plt.show()
 
 dot_data = tree.export_graphviz(cls

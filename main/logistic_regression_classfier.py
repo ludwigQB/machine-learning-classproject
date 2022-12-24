@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
@@ -57,12 +57,9 @@ for j in range(5):
 ac = accuracy_score(y_test, y_pred)
 print("准确率:%.4lf" % ac)
 
-plt.figure()
-df = pd.DataFrame(confusion_matrix(y_test, y_pred),
-                  index=labels,
-                  columns=labels
-                  )
-seaborn.heatmap(df, annot=True)
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(cm, display_labels=labels)
+disp.plot()
 plt.show()
 
 print("分类报告:")

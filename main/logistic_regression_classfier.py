@@ -3,7 +3,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
-from PCA import Dimensionality_reduction
+from Utils.FunC import Dimensionality_reduction
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+import seaborn
 
 data_train=pd.read_csv('../dataset/ECG5000_TRAIN.tsv',sep='\t',header=None)
 x=np.array(data_train)[:,1:141]
@@ -12,6 +16,8 @@ y=np.array(data_train)[:,0]
 data_test=pd.read_csv('../dataset/ECG5000_TEST.tsv',sep='\t',header=None)
 x_test=np.array(data_test)[:,1:141]
 y_test=np.array(data_test)[:,0]
+
+labels=['class 1','class 2','class 3','class 4','class 5']
 
 n_dimension=3
 x=Dimensionality_reduction(x,n_dimension)
@@ -29,7 +35,7 @@ y_pred=np.sum(y_pred,axis=1)
 
 y_score=cls.decision_function(x_test)
 for i in range(y_pred.shape[0]):
-    if y_score[i,4] >10:
+    if y_score[i,4] >-3.5:
         y_test[i] = 5
 
 
@@ -50,6 +56,23 @@ for j in range(5):
     plt.legend(["class {}".format(j+1)])
     plt.show()
 
-print('准确率：',metrics.precision_score(y_test,y_pred,average=None,zero_division=0))
-print('召回率：',metrics.recall_score(y_test,y_pred,average=None,zero_division=0))
-print('混淆矩阵：\n',metrics.confusion_matrix(y_test,y_pred))
+ac=accuracy_score(y_test,y_pred)
+print("准确率:%.4lf" % ac)
+
+plt.style.use('ggplot')
+plt.subplots(figsize=(30,20))
+df=pd.DataFrame(confusion_matrix(y_test,y_pred),
+                index=labels,
+                columns=labels
+                )
+seaborn.heatmap(df,annot=True)
+plt.show()
+
+print("分类报告:")
+print(classification_report(y_test,
+                            y_pred,
+                            target_names=labels,
+                            zero_division=0
+                            )
+      )
+

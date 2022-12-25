@@ -8,6 +8,8 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import learning_curve
 from sklearn.svm import SVC
 
+from Utils.FunC import Dimensionality_reduction
+
 data_train = pd.read_csv('../dataset/ECG5000_TRAIN.tsv', sep='\t', header=None)
 x = np.array(data_train)[:, 1:141]
 y = np.array(data_train)[:, 0]

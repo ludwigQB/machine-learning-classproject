@@ -14,25 +14,19 @@ from Utils.FunC import Dimensionality_reduction
 
 data_train = pd.read_csv('../dataset/ECG5000_TRAIN.tsv', sep='\t', header=None)
 x = np.array(data_train)[:, 1:141]
-# xmax = np.max(x, axis=0)
-# xmin = np.min(x, axis=0)
-# x = normalize(x, xmax, xmin, 0)
 y = np.array(data_train)[:, 0]
 
 data_test = pd.read_csv('../dataset/ECG5000_TEST.tsv', sep='\t', header=None)
 x_test = np.array(data_test)[:, 1:141]
-# x_tmax = np.max(x_test, axis=0)
-# x_tmin = np.min(x_test, axis=0)
-# x_test = normalize(x_test, x_tmax, x_tmin, 0)
 y_test = np.array(data_test)[:, 0]
 
 labels = ['class 1', 'class 2', 'class 3', 'class 4', 'class 5']
 
-n_dimension = 14
+n_dimension = 6
 x = Dimensionality_reduction(x, n_dimension)
 x_test = Dimensionality_reduction(x_test, n_dimension)
 
-cls = DecisionTreeClassifier(criterion='entropy', min_samples_leaf=5, max_depth=4)
+cls = DecisionTreeClassifier(criterion='entropy', min_samples_leaf=5, max_depth=4, random_state=0)
 cls.fit(x, y)
 y_pred = cls.predict(x_test)
 ac = accuracy_score(y_test, y_pred)
@@ -41,6 +35,7 @@ print("准确率:%.4lf" % ac)
 cm = confusion_matrix(y_test, y_pred)
 disp = ConfusionMatrixDisplay(cm, display_labels=labels)
 disp.plot()
+plt.savefig('../结果可视化/决策树/混淆矩阵.png')
 plt.show()
 
 dot_data = tree.export_graphviz(cls
@@ -48,7 +43,7 @@ dot_data = tree.export_graphviz(cls
                                 , filled=True
                                 , rounded=True)
 graph = graphviz.Source(dot_data)
-graph.render('../决策树可视化/决策树可视化')
+graph.render('../结果可视化/决策树/决策树可视化')
 score = cls.score(x_test, y_pred)
 
 print("分类报告:")
@@ -68,4 +63,5 @@ ax.grid()
 ax.plot(train_sizes, np.mean(train_scores, axis=1), 'o-', color='r', label='train score')
 ax.plot(train_sizes, np.mean(test_scores, axis=1), 'o-', color='g', label='test score')
 ax.legend(loc='best')
+plt.savefig('../结果可视化/决策树/学习曲线.png')
 plt.show()

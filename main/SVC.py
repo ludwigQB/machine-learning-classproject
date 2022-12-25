@@ -5,7 +5,6 @@ from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
-from sklearn.metrics import roc_curve
 from sklearn.model_selection import learning_curve
 from sklearn.svm import SVC
 
@@ -23,25 +22,10 @@ labels = ['class 1', 'class 2', 'class 3', 'class 4', 'class 5']
 # x=Dimensionality_reduction(x,n_dimension)
 # x_test=Dimensionality_reduction(x_test,n_dimension)
 
-cls = SVC(random_state=5000, max_iter=50000).fit(x, y)
+cls = SVC(random_state=5000, max_iter=50000)
+cls.fit(x, y)
 y_pred = cls.predict(x_test)
 y_score = cls.decision_function(x_test)
-
-for j in range(5):
-    y_temp = np.copy(y_test)
-    for i in range(y_pred.shape[0]):
-        if y_temp[i] != j + 1:
-            y_temp[i] = -1
-        else:
-            y_temp[i] = 1
-    fpr, tpr, thr = roc_curve(y_temp, y_score[:, j])
-    plt.figure()
-    ax = plt.gca()
-    plt.xlabel('FPR')
-    plt.ylabel('TPR')
-    plt.plot(fpr, tpr)
-    plt.legend(["class {}".format(j + 1)])
-    plt.show()
 
 ac = accuracy_score(y_test, y_pred)
 print("准确率:%.4lf" % ac)
@@ -49,6 +33,7 @@ print("准确率:%.4lf" % ac)
 cm = confusion_matrix(y_test, y_pred)
 disp = ConfusionMatrixDisplay(cm, display_labels=labels)
 disp.plot()
+plt.savefig('../结果可视化/支持向量机/混淆矩阵.png')
 plt.show()
 
 print("分类报告:")
@@ -68,4 +53,5 @@ ax.grid()
 ax.plot(train_sizes, np.mean(train_scores, axis=1), 'o-', color='r', label='train score')
 ax.plot(train_sizes, np.mean(test_scores, axis=1), 'o-', color='g', label='test score')
 ax.legend(loc='best')
+plt.savefig('../结果可视化/支持向量机/学习曲线.png')
 plt.show()

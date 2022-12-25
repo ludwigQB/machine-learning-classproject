@@ -15,8 +15,7 @@ y_test = np.array(data_test)[:, 0]
 
 labels = ['class 1', 'class 2', 'class 3', 'class 4', 'class 5']
 
-# cls=DBSCAN(min_samples=1,eps=4.5
-#            ) ##DBSCAN中噪声点过多
+# cls=DBSCAN(min_samples=1,eps=4.5) ##DBSCAN中噪声点过多
 cls = KMeans(n_clusters=3, n_init=10, random_state=1)  ##4类与5类样本过少，若选择五个聚类中心则聚类效果较差
 cls.fit(x)
 labels_pred = cls.labels_
@@ -35,4 +34,6 @@ plt.subplot(1, 2, 2)
 for target in y_pred:
     plt.scatter(x_test[:, 0][y_pred == target], x_test[:, 1][y_pred == target], linewidths=0.01)
 plt.title('label unknown')
+plt.savefig('../结果可视化/K-means/K-means聚类效果.png')
+# plt.savefig('../结果可视化/K-means/DBSCAN聚类效果.png')
 plt.show()
